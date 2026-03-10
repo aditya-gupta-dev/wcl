@@ -65,7 +65,7 @@ func main() {
 
 func countLines(path string) (int, error) {
 	var lines int = 0
-	var buf [1024]byte
+	var buf [24 * 1024]byte
 	var newline = []byte{'\n'}
 
 	file, err := os.Open(path)
