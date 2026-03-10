@@ -12,6 +12,8 @@ import (
 	"sync"
 )
 
+const DefaultBufferSize int = 24 * 1024
+
 func main() {
 
 	var verbose bool
@@ -20,13 +22,16 @@ func main() {
 	var workDir string = "."
 	var total *big.Int = big.NewInt(0)
 
-	verboseflag := os.Getenv("VERBOSE")
-
 	if len(os.Args) > 1 {
 		workDir = os.Args[1]
+
+		if os.Args[1] == "--help" || os.Args[1] == "help" {
+			fmt.Println("count lines in your project. blazingly fast\nUse VERBOSE=1 env variable for verbose output.")
+			os.Exit(1)
+		}
 	}
 
-	if verboseflag == "1" {
+	if os.Getenv("VERBOSE") == "1" {
 		verbose = true
 	} else {
 		verbose = false
@@ -65,7 +70,7 @@ func main() {
 
 func countLines(path string) (int, error) {
 	var lines int = 0
-	var buf [24 * 1024]byte
+	var buf [DefaultBufferSize]byte
 	var newline = []byte{'\n'}
 
 	file, err := os.Open(path)
