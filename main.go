@@ -26,7 +26,7 @@ func main() {
 		workDir = os.Args[1]
 
 		if os.Args[1] == "--help" || os.Args[1] == "help" {
-			fmt.Println("count lines in your project. blazingly fast\nUse VERBOSE=1 env variable for verbose output.")
+			fmt.Println("count lines in your project. blazingly fast\nUse VERBOSE=1 env variable for verbose output.\n\t-By Aditya Gupta")
 			os.Exit(1)
 		}
 	}
