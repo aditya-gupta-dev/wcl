@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"log"
 	"math/big"
 	"os"
 	"path/filepath"
@@ -47,7 +46,6 @@ func main() {
 				wg.Go(func() {
 					lines, err := countLines(path)
 					if err != nil {
-						log.Println("error: ", err.Error())
 						return
 					}
 
