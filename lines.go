@@ -26,6 +26,7 @@ func runCountLines(workDir string) {
 				wg.Go(func() {
 					lines, err := countLines(path)
 					if err != nil {
+						// TODO: log errors in lines & size command
 						return
 					}
 
