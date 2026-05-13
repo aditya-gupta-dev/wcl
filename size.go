@@ -21,7 +21,8 @@ func runCountSize(args *ArgsModel) {
 		defer waitGroup.Done()
 		filepath.WalkDir(args.WorkDir, func(path string, d fs.DirEntry, err error) error {
 			if err != nil {
-				return err
+				fmt.Fprintf(os.Stderr, "error walking directory: %v\n", err)
+				return nil
 			}
 
 			if !d.IsDir() {
@@ -31,6 +32,7 @@ func runCountSize(args *ArgsModel) {
 					size, err := countSize(path)
 
 					if err != nil {
+						fmt.Fprintf(os.Stderr, "error getting size of %s: %v\n", path, err)
 						return
 					}
 

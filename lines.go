@@ -21,7 +21,8 @@ func runCountLines(args *ArgsModel) {
 		defer wg.Done()
 		filepath.WalkDir(args.WorkDir, func(path string, d fs.DirEntry, err error) error {
 			if err != nil {
-				return err
+				fmt.Fprintf(os.Stderr, "error walking directory: %v\n", err)
+				return nil
 			}
 
 			if !d.IsDir() {
@@ -30,7 +31,7 @@ func runCountLines(args *ArgsModel) {
 					defer wg.Done()
 					lines, err := countLines(path)
 					if err != nil {
-						// TODO: log errors in lines & size command
+						fmt.Fprintf(os.Stderr, "error counting lines in %s: %v\n", path, err)
 						return
 					}
 
