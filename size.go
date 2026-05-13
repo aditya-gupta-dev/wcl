@@ -9,37 +9,43 @@ import (
 	"sync"
 )
 
-func runCountSize(workDir string) {
+const DefaultBufferSize int = 24 * 1024
+
+func runCountSize(args *ArgsModel) {
 	var waitGroup sync.WaitGroup
 	var mtx sync.Mutex
 	var total *big.Int = big.NewInt(0)
 
-	waitGroup.Go(func() {
-		filepath.WalkDir(workDir, func(path string, d fs.DirEntry, err error) error {
+	waitGroup.Add(1)
+	go func() {
+		defer waitGroup.Done()
+		filepath.WalkDir(args.WorkDir, func(path string, d fs.DirEntry, err error) error {
 			if err != nil {
 				return err
 			}
 
 			if !d.IsDir() {
-				waitGroup.Go(func() {
+				waitGroup.Add(1)
+				go func() {
+					defer waitGroup.Done()
 					size, err := countSize(path)
 
 					if err != nil {
 						return
 					}
 
-					if verbose {
+					if args.Verbose {
 						fmt.Println(filepath.Base(path), size)
 					}
 
 					mtx.Lock()
 					total = total.Add(total, big.NewInt(size))
 					mtx.Unlock()
-				})
+				}()
 			}
 			return nil
 		})
-	})
+	}()
 
 	waitGroup.Wait()
 	fmt.Println(formatBytes(total))
